@@ -1,135 +1,28 @@
-# Turborepo starter
+## OpenHire (working title)
 
-This Turborepo starter is maintained by the Turborepo core team.
+We are preparing a recruiter-facing experience that feels native to OpenAI’s internal **OpenHouse** tooling while specializing in interview loops. Nothing is wired up yet—this document captures what we are aiming to build over the weekend.
 
-## Using this example
+### What we are going to build
 
-Run the following command:
+- **OpenHire workspace**: a left-rail entry inside an OpenHouse-inspired shell that opens a dedicated recruiter lane without adding another dashboard.
+- **Recruiter copilot thread**: powered by OpenAI’s October 2025 stack (ChatKit, Agents SDK, Responses API, Document Search, Realtime). It will ingest transcripts, emails, resumes, and produce evidence-first summaries, role-fit suggestions, and curated handoffs.
+- **Live signal checklist**: five OpenAI mission prompts (mission alignment, safety mindset, execution ownership, cross-functional fluency, routing recommendation) that update in real time when evidence is found.
+- **Role routing + handoffs**: surface top-three internal landing spots and spin up a fresh, share-safe chat thread for the next interviewer so private notes stay private.
+- **Context budget + privacy controls**: codex-style token gauge, explicit “ephemeral mode,” and data-retention tooling so recruiters feel confident experimenting without polluting canonical candidate context.
 
-```sh
-npx create-turbo@latest
+### Near-term to-do list
+
+1. Recreate the OpenHouse look & feel (layout, off-canvas sources panel, keyboard affordances) as static scaffolding.
+2. Integrate ChatKit (hosted) with our Next.js App Router setup using pnpm and Turbopack.
+3. Prototype the recruiter flow end-to-end with mocked data (emails lost, handoff gaps, role recommendations).
+4. Add Agents SDK + Responses API integration, including tracing and an initial eval suite for summaries.
+5. Layer in optional Realtime WebRTC capture and the codex-style context budget meter.
+
+### Getting started (dev environment)
+
+```bash
+pnpm install
+pnpm dev        # Turbopack-enabled dev server
 ```
 
-## What's inside?
-
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
-```
-
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
-
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+The app currently renders the default Next.js starter screen. All functionality listed above is still ahead of us.
