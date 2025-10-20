@@ -2,6 +2,8 @@
 
 import { NextResponse } from 'next/server'
 
+import { getStore } from '@/lib/serverStore'
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 const OPENAI_BASE_URL = process.env.OPENAI_BASE_URL ?? 'https://api.openai.com'
 const VECTOR_STORE_ID = process.env.OPENAI_VECTOR_STORE_ID
@@ -68,9 +70,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: attached?.error?.message ?? 'attach failed' }, { status: attachRes.status })
     }
 
+    const { timeline } = getStore()
+    let entry: { id: string; type: 'file'; fileName: string; author: string; at: number } | null = null
+    if (candidate) {
+      entry = {
+        id: Math.random().toString(36).slice(2, 9),
+        type: 'file',
+        fileName: file.name,
+        author: (form.get('uploader') as string) || 'You',
+        at: Date.now(),
+      }
+      const list = (timeline[candidate] ||= [])
+      list.unshift(entry)
+    }
+
     return NextResponse.json({
       file_id: fileId,
       vector_store_file: attached,
+      entry,
     })
   } catch (error) {
     console.error('vectorstore upload error', error)

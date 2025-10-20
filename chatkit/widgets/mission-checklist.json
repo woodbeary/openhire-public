@@ -1,0 +1,54 @@
+{
+  "id": "openhire.mission_checklist",
+  "title": "Mission checklist",
+  "subtitle": "Live evidence captured during the call",
+  "emptyEvidenceLabel": "No candidate evidence yet.",
+  "card": {
+    "padding": { "x": 20, "y": 18 },
+    "background": "#ffffff",
+    "radius": "lg",
+    "gap": 16
+  },
+  "listView": {
+    "gap": 14,
+    "divider": { "spacing": 12, "color": "#edf0f7" }
+  },
+  "badgeVariants": {
+    "pending": { "label": "Pending", "color": "secondary", "variant": "soft" },
+    "progress": { "label": "In review", "color": "info", "variant": "soft" },
+    "complete": { "label": "Backed", "color": "success", "variant": "solid" },
+    "risk": { "label": "Risk", "color": "danger", "variant": "solid" }
+  },
+  "items": [
+    {
+      "mission_id": "mission_alignment",
+      "icon": "sparkle-double",
+      "title": "Mission alignment",
+      "description": "Understands and resonates with OpenAI's mission and the role's impact."
+    },
+    {
+      "mission_id": "safety_mindset",
+      "icon": "lifesaver",
+      "title": "Safety mindset",
+      "description": "Demonstrates thoughtful handling of risk, safety, and data topics."
+    },
+    {
+      "mission_id": "execution_ownership",
+      "icon": "bolt",
+      "title": "Execution ownership",
+      "description": "Shows end-to-end ownership on complex, high-stakes projects."
+    },
+    {
+      "mission_id": "xf_collaboration",
+      "icon": "cube",
+      "title": "Cross-functional fluency",
+      "description": "Partners effectively across product, engineering, and go-to-market."
+    },
+    {
+      "mission_id": "routing_recommendation",
+      "icon": "suitcase",
+      "title": "Routing recommendation",
+      "description": "Signals best-fit team or follow-up path for the candidate."
+    }
+  ]
+}

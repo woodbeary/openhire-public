@@ -4,8 +4,9 @@ import { Agent, AgentInputItem, Runner, webSearchTool, codeInterpreterTool, tool
 import { z } from 'zod'
 
 import { DEFAULT_WORKFLOW_ID } from './constants'
-import type { WorkflowClassification, WorkflowResult, WorkflowContext } from './types'
+import type { WorkflowClassification, WorkflowResult, WorkflowContext, WorkflowMissionUpdate } from './types'
 import type { MissionId } from '@/lib/missions'
+import { buildMissionChecklistWidget } from '@/lib/chatkit/mission-checklist'
 
 const webSearchPreview = webSearchTool({
   searchContextSize: 'medium',
@@ -225,6 +226,26 @@ export async function runWorkflow(workflow: WorkflowInput): Promise<WorkflowResu
       throw new Error('Classification agent returned no output')
     }
 
+    const finalize = (variant: WorkflowResult['variant'], outputText: string): WorkflowResult => {
+      const missionUpdateResults: WorkflowMissionUpdate[] = missionUpdates.map((update) => ({
+        mission_id: update.mission_id,
+        status: update.status,
+        evidence: [...update.evidence],
+      }))
+
+      const widgets = [buildMissionChecklistWidget(missionUpdateResults)]
+
+      return {
+        variant,
+        outputText,
+        queryRewrite: queryRewriteResult,
+        classification: classifyResult as WorkflowClassification,
+        conversation: conversationHistory,
+        missionUpdates: missionUpdateResults,
+        widgets,
+      }
+    }
+
     if (classifyResult.operating_procedure === 'q-and-a') {
       const internalQAResultTemp = await runner.run(internalQA, [...conversationHistory])
       conversationHistory.push(...internalQAResultTemp.newItems.map((item) => item.rawItem))
@@ -234,14 +255,7 @@ export async function runWorkflow(workflow: WorkflowInput): Promise<WorkflowResu
         throw new Error('Internal Q&A agent returned no output')
       }
 
-      return {
-        variant: 'internal-qa',
-        outputText: internalQAResult,
-        queryRewrite: queryRewriteResult,
-        classification: classifyResult as WorkflowClassification,
-        conversation: conversationHistory,
-        missionUpdates,
-      }
+      return finalize('internal-qa', internalQAResult)
     }
 
     if (classifyResult.operating_procedure === 'fact-finding') {
@@ -253,14 +267,7 @@ export async function runWorkflow(workflow: WorkflowInput): Promise<WorkflowResu
         throw new Error('External fact finding agent returned no output')
       }
 
-      return {
-        variant: 'external-fact-finding',
-        outputText: externalFactFindingResult,
-        queryRewrite: queryRewriteResult,
-        classification: classifyResult as WorkflowClassification,
-        conversation: conversationHistory,
-        missionUpdates,
-      }
+      return finalize('external-fact-finding', externalFactFindingResult)
     }
 
     const fallbackResultTemp = await runner.run(fallbackAgent, [...conversationHistory])
@@ -271,13 +278,6 @@ export async function runWorkflow(workflow: WorkflowInput): Promise<WorkflowResu
       throw new Error('Fallback agent returned no output')
     }
 
-    return {
-      variant: 'fallback-agent',
-      outputText: fallbackResult,
-      queryRewrite: queryRewriteResult,
-      classification: classifyResult as WorkflowClassification,
-      conversation: conversationHistory,
-      missionUpdates,
-    }
+    return finalize('fallback-agent', fallbackResult)
   })
 }
