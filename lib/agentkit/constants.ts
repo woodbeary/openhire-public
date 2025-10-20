@@ -1,0 +1,1 @@
+export const DEFAULT_WORKFLOW_ID = 'wf_YOUR_WORKFLOW_ID'
